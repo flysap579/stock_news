@@ -27,4 +27,4 @@ jobs:
       - name: Run stock price notification script
         env:
           LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
-        run: python stock_price_notification.py
+        run: python stock_price_notification_US.py
