@@ -6,7 +6,12 @@ on:
     # 注意: GitHub Actions 使用 UTC 時間,所以需要調整
     - cron: "30 6 * * 1-5" # UTC 00:30 (台灣時間 14:30), 週一到週五
   workflow_dispatch: # 保留手動觸發選項
-
+  
+ schedule:
+    # 每天台灣時間 12:00 運行 (UTC+8)
+    # 注意: GitHub Actions 使用 UTC 時間,所以需要調整
+    - cron: "00 4 * * 1-5" # UTC 04:00 (台灣時間 12:00), 週一到週五
+  workflow_dispatch: # 保留手動觸發選項
 jobs:
   send_notification:
     runs-on: ubuntu-latest
