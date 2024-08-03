@@ -22,6 +22,9 @@ def fetch_taiwan_stock_data():
             print("DataFrame head:")
             print(df.head())
 
+            # 格式化數字
+            df = df.applymap(lambda x: f'{x:,}' if isinstance(x, (int, float)) else x)
+
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
             plt.rcParams['font.size'] = 10
@@ -67,7 +70,7 @@ def send_line_notify(image_bytes, token):
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
-    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
+    token = 'YOUR_LINE_NOTIFY_TOKEN'  # 使用你的 LINE Notify token
     image_bytes = fetch_taiwan_stock_data()
     if image_bytes:
         send_line_notify(image_bytes, token)
