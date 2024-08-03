@@ -28,7 +28,7 @@ def fetch_taiwan_stock_data():
                     # 將數字轉換為浮點數
                     value = float(x)
                     # 四捨五入至億元（即以 1e8 為單位），保留小數點後兩位
-                    value_in_billion = round(value / 1e8, 2)
+                    value_in_billion = round(value / 1e8)
                     # 返回格式化後的字符串，並添加「億元」單位
                     return f'{value_in_billion} 億元'
                 except (ValueError, TypeError):
@@ -43,12 +43,12 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 12
+            plt.rcParams['font.size'] = 40
 
             # 計算圖片大小
             num_rows, num_cols = df.shape
-            fig_width = max(num_cols * 2, 10)  # 每列寬度約為2單位，最小寬度10
-            fig_height = max(num_rows * 0.4, 6)  # 每行高度約為0.4單位，最小高度6
+            fig_width = max(num_cols * 10, 50)  # 每列寬度約為2單位，最小寬度10
+            fig_height = max(num_rows * 2, 30)  # 每行高度約為0.4單位，最小高度6
 
             # 將 DataFrame 繪製為圖片
             fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
