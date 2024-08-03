@@ -20,8 +20,10 @@ jobs:
 
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install -y fonts-noto-cjk # 安裝支持中文的字體
         python -m pip install --upgrade pip
-        pip install matplotlib pillow requests pandas beautifulsoup4 lxml html5lib
+        pip install requests pandas matplotlib pillow
 
     - name: Run script
       env:
