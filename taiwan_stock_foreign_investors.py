@@ -20,17 +20,18 @@ def fetch_taiwan_stock_data():
 
             # 將第一行標題拆分成兩行
             if not df.empty:
-                first_row = df.iloc[0].values
-                # 替換第一行的內容，設置成兩行
+                # 假設原始表格的標題行數據在第一行
+                original_headers = df.iloc[0].values
+                # 重新設置標題行
                 df.columns = [
                     '113年08月02日\n三大法人買賣金額統計表',  # 第一行
-                    '單位名稱',  # 第二行
+                    '單位名稱',
                     '買進金額',
                     '賣出金額',
                     '買賣差額'
                 ]
-                df = df[1:]  # 移除合併行
-                df.reset_index(drop=True, inplace=True)  # 重置索引
+                # 去除原始的標題行
+                df = df[1:].reset_index(drop=True)
 
             # 格式化數字
             def format_number(x):
