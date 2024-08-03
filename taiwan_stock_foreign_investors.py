@@ -23,7 +23,7 @@ def fetch_taiwan_stock_data():
                     # 將數字轉換為浮點數
                     value = float(x)
                     # 四捨五入至億元（即以 1e8 為單位），保留小數點後兩位
-                    value_in_billion = round(value / 1e8, 2)
+                    value_in_billion = round(value / 1e8, 0)
                     # 返回格式化後的字符串，並添加「億元」單位
                     return f'{value_in_billion} 億元'
                 except (ValueError, TypeError):
