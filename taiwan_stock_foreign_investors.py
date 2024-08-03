@@ -13,26 +13,16 @@ def fetch_taiwan_stock_data():
         # 使用 pandas 解析 HTML 表格
         tables = pd.read_html(html_content, flavor='lxml')
         if tables:
-            df = tables[0]
+            # 合併所有表格的數據
+            df = pd.concat(tables, ignore_index=True)
             
             # 打印表格的前幾行以確認數據
             print("DataFrame head:")
             print(df.head())
 
-            df.columns = df.iloc[0]  # 第一行是表頭
-            df = df[1:]  # 去掉第一行表頭
-            df.columns = df.columns.str.strip()  # 去掉列名中的空格
-
-            # 查找最近一天的數據
-            if '日期' in df.columns:
-                recent_date = df['日期'].max()
-                recent_data = df[df['日期'] == recent_date]
-
-                # 格式化為字符串
-                message = recent_data.to_string(index=False)
-                return f"最近一天（三大法人買賣金額）\n\n{message}"
-            else:
-                return "未找到日期列。請檢查網頁表格結構。"
+            # 格式化為字符串
+            message = df.to_string(index=False)
+            return f"三大法人買賣金額\n\n{message}"
         else:
             return "No tables found on the webpage."
     except Exception as e:
