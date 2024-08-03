@@ -20,20 +20,18 @@ def fetch_taiwan_stock_data():
 
             # 假設第一行為合併行，將其拆分為兩行
             if not df.empty and df.shape[0] > 0:
-                # 提取原始數據
-                original_data = df.iloc[0].values
-                # 假設第一行有兩部分，進行拆分
-                split_row1 = ['合併部分1', '合併部分2']  # 這裡需要根據實際情況進行修改
-                split_row2 = original_data[2:]  # 剩餘部分作為第二行
+                # 提取第一行的兩個標題
+                first_row = df.iloc[0].values
+                title_row1 = first_row[0]  # '113年08月02日 三大法人買賣金額統計表'
+                title_row2 = first_row[1]  # '單位名稱  買進金額  賣出金額  買賣差額'
 
-                # 創建新的 DataFrame
-                df_new = pd.DataFrame([split_row1, split_row2], columns=df.columns)
-                df_new = pd.concat([df_new, df[1:]], ignore_index=True)
+                # 設置 DataFrame 的標題行
+                header = title_row2.split(' ')
+                df.columns = header  # 使用標題行作為列標題
 
-                # 將 DataFrame 列標題設置為第一行
-                df_new.columns = df.iloc[1]
-                df_new = df_new[2:]  # 移除處理行
-                df_new.reset_index(drop=True, inplace=True)  # 重置索引
+                # 刪除標題行
+                df = df[1:]
+                df.reset_index(drop=True, inplace=True)  # 重置索引
 
             # 格式化數字
             def format_number(x):
@@ -48,11 +46,11 @@ def fetch_taiwan_stock_data():
                     return x  # 如果轉換失敗，返回原始值
 
             # 應用格式化
-            df_new = df_new.applymap(format_number)
+            df = df.applymap(format_number)
 
             # 打印表格的前幾行以確認數據
             print("DataFrame head:")
-            print(df_new.head())
+            print(df.head())
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
@@ -63,11 +61,11 @@ def fetch_taiwan_stock_data():
             ax.axis('off')  # 隱藏坐標軸
             
             # 顯示表格標題
-            title = '三大法人買賣金額統計表'
+            title = f'{title_row1}\n{title_row2}'
             ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold')
-            
+
             # 顯示表格內容
-            table = ax.table(cellText=df_new.values, colLabels=df_new.columns, cellLoc='center', loc='center')
+            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
             table.scale(1.2, 1.2)  # 調整表格縮放比例
