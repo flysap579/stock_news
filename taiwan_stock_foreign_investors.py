@@ -45,12 +45,15 @@ def fetch_taiwan_stock_data():
             # 獲取當前日期
             today_date = datetime.now().strftime('%Y年%m月%d日')
 
-            # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(10,6), dpi=150)  # 設置圖片大小和解析度
+            # 設置圖片大小和解析度
+            fig, ax = plt.subplots(figsize=(10,6), dpi=150)  
             ax.axis('off')  # 隱藏坐標軸
 
-            # 添加標題
-            plt.title(f'{today_date} 三大法人買賣金額表', fontsize=16, fontweight='bold')
+            # 設置標題行為兩行
+            title = f'{today_date} 三大法人買賣金額'
+            title_line1 = title[:10]  # 標題的前10個字元
+            title_line2 = title[10:]  # 標題的剩餘部分
+            plt.title(f'{title_line1}\n{title_line2}', fontsize=16, fontweight='bold')
 
             # 添加表格
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
