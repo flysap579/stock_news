@@ -17,13 +17,13 @@ def fetch_taiwan_stock_data():
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
-            
+
             # 打印表格的前幾行以確認數據
             print("DataFrame head:")
             print(df.head())
 
             # 設置 matplotlib 字體以支持中文字符
-            plt.rcParams['font.family'] = 'SimHei'
+            plt.rcParams['font.family'] = 'SimHei'  # 使用 SimHei 字體
             plt.rcParams['font.size'] = 10
 
             # 將 DataFrame 繪製為圖片
@@ -61,35 +61,13 @@ def send_line_notify(image_bytes, token):
         }
         response = requests.post(url, headers=headers, data=data, files=files)
         response.raise_for_status()  # 確保 POST 請求成功
-        print(f'Status Code: {response.status_code}')
-        print(f'Response Text: {response.text}')
-        print('Notification sent successfully!')
-    except requests.exceptions.RequestException as e:
-        print(f'Failed to send notification. Error: {str(e)}')
-
-def send_line_notify(image_bytes, token):
-    try:
-        url = 'https://notify-api.line.me/api/notify'
-        headers = {
-            'Authorization': f'Bearer {token}'
-        }
-        files = {
-            'imageFile': ('stock_data.png', image_bytes, 'image/png')
-        }
-        data = {
-            'message': '三大法人買賣金額'
-        }
-        response = requests.post(url, headers=headers, data=data, files=files)
-        response.raise_for_status()  # 確保 POST 請求成功
         print(f'Notification sent successfully! Status Code: {response.status_code}')
         print(f'Response Text: {response.text}')
     except requests.exceptions.RequestException as e:
         print(f'Failed to send notification. Error: {str(e)}')
 
-
-
 if __name__ == "__main__":
-    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
+    token = 'YOUR_LINE_NOTIFY_TOKEN'  # 使用你的 LINE Notify token
     image_bytes = fetch_taiwan_stock_data()
     if image_bytes:
         send_line_notify(image_bytes, token)
