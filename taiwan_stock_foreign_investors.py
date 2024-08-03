@@ -47,7 +47,14 @@ def fetch_taiwan_stock_data():
             table.auto_set_font_size(False)
             table.set_fontsize(10)
             table.scale(1,3)  # 調整表格縮放比例
-
+            # 顯示表格內容
+            # 用空白字符填充標題行，實現多行顯示
+            multi_line_columns = [
+                '單位名稱',  # 第二行
+                '買進金額',
+                '賣出金額',
+                '買賣差額'
+            ]
             # 將圖片保存為 bytes
             buf = BytesIO()
             plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1)
