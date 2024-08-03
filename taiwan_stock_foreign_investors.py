@@ -21,7 +21,7 @@ def fetch_taiwan_stock_data():
             print(df.head())
 
             # 設置 matplotlib 字體以支持中文字符
-            plt.rcParams['font.family'] = 'Noto Sans CJK'
+            plt.rcParams['font.family'] = 'Noto Sans CJK'  # 確保使用的字體正確
             plt.rcParams['font.size'] = 10
 
             # 將 DataFrame 繪製為圖片
@@ -59,9 +59,9 @@ def send_line_notify(image_bytes, token):
             'message': '三大法人買賣金額'
         }
         response = requests.post(url, headers=headers, data=data, files=files)
+        response.raise_for_status()  # 確保 POST 請求成功
         print(f'Status Code: {response.status_code}')
         print(f'Response Text: {response.text}')
-        response.raise_for_status()  # 確保 POST 請求成功
         print('Notification sent successfully!')
     except requests.exceptions.RequestException as e:
         print(f'Failed to send notification. Error: {str(e)}')
