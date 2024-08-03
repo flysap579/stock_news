@@ -18,12 +18,17 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
-            # 格式化數字
-            def format_number(x):
-                try:
-                    return f'{int(x):,}'  # 將數字格式化為帶有逗號的格式
-                except (ValueError, TypeError):
-                    return x
+     # 格式化數字
+def format_number(x):
+    try:
+        # 將數字轉換為浮點數
+        value = float(x)
+        # 四捨五入至億元（即以 1e8 為單位），保留小數點後兩位
+        value_in_billion = round(value / 1e8, 2)
+        # 返回格式化後的字符串，並添加「億元」單位
+        return f'{value_in_billion} 億元'
+    except (ValueError, TypeError):
+        return x  # 如果轉換失敗，返回原始值
 
             # 應用格式化
             df = df.applymap(format_number)
