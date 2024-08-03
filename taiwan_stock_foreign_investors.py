@@ -22,9 +22,6 @@ def fetch_taiwan_stock_data():
             print("DataFrame head:")
             print(df.head())
 
-            # 格式化數字
-            df = df.applymap(lambda x: f'{x:,}' if isinstance(x, (int, float)) else x)
-
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
             plt.rcParams['font.size'] = 10
