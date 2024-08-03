@@ -67,6 +67,27 @@ def send_line_notify(image_bytes, token):
     except requests.exceptions.RequestException as e:
         print(f'Failed to send notification. Error: {str(e)}')
 
+def send_line_notify(image_bytes, token):
+    try:
+        url = 'https://notify-api.line.me/api/notify'
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        files = {
+            'imageFile': ('stock_data.png', image_bytes, 'image/png')
+        }
+        data = {
+            'message': '三大法人買賣金額'
+        }
+        response = requests.post(url, headers=headers, data=data, files=files)
+        response.raise_for_status()  # 確保 POST 請求成功
+        print(f'Notification sent successfully! Status Code: {response.status_code}')
+        print(f'Response Text: {response.text}')
+    except requests.exceptions.RequestException as e:
+        print(f'Failed to send notification. Error: {str(e)}')
+
+
+
 if __name__ == "__main__":
     token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
     image_bytes = fetch_taiwan_stock_data()
