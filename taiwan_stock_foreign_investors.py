@@ -22,14 +22,13 @@ def fetch_taiwan_stock_data():
             if not df.empty:
                 # 使用多行標題
                 df.columns = [
-                    '113年08月03日三大法人買賣金額統計表'\n,  # 第一行標題
+                    '113年08月03日\n三大法人買賣金額統計表',  # 第一行標題
                     '單位名稱',
                     '買進金額',
                     '賣出金額',
                     '買賣差額'
                 ]
-                
-              # 刪除原始標題行
+                # 刪除原始標題行
                 df = df[1:].reset_index(drop=True)
 
             # 格式化數字
@@ -69,6 +68,11 @@ def fetch_taiwan_stock_data():
             table.auto_set_font_size(False)
             table.set_fontsize(10)
             table.auto_set_column_width(range(len(df.columns)))  # 自動調整列寬
+
+            # 調整表格標題顯示為多行
+            for (i, label) in enumerate(table.get_celld().values()):
+                if i[0] == 0:  # 標題行
+                    label.set_text(label.get_text().replace('\n', ' '))  # 替換行分隔符為空格
 
             # 將圖片保存為 bytes
             buf = BytesIO()
