@@ -20,7 +20,7 @@ def fetch_taiwan_stock_data():
 
             # 移除表格的第一行
             if not df.empty:
-                df = df.iloc[0:].reset_index(drop=True)  # 刪除第一行，並重設索引
+                df = df.iloc[1:].reset_index(drop=True)  # 刪除第一行，並重設索引
 
             # 格式化數字
             def format_number(x):
@@ -55,10 +55,18 @@ def fetch_taiwan_stock_data():
             ax.axis('off')  # 隱藏坐標軸
 
             # 顯示表格內容
-            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+            # 用空白字符填充標題行，實現多行顯示
+            multi_line_columns = [
+                '113年08月03日三大法人買賣金額統計表\n',  # 第一行
+                '單位名稱',  # 第二行
+                '買進金額',
+                '賣出金額'
+            ]
+            multi_line_df = pd.DataFrame(df.values, columns=multi_line_columns)
+            table = ax.table(cellText=multi_line_df.values, colLabels=multi_line_df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.auto_set_column_width(range(len(df.columns)))  # 自動調整列寬
+            table.auto_set_column_width(range(len(multi_line_df.columns)))  # 自動調整列寬
 
             # 將圖片保存為 bytes
             buf = BytesIO()
