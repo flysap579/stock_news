@@ -11,17 +11,26 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3 # 更新為最新版本
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v3 # 更新為最新版本
+      uses: actions/setup-python@v3
       with:
-        python-version: '3.x' # 使用 Python 3.x 版本
+        python-version: '3.x'
 
     - name: Install dependencies
       run: |
+        sudo apt-get update
+        sudo apt-get install -y fonts-dejavu fonts-dejavu-extra # 安裝支持中文的字體
+        sudo apt-get install -y fontconfig  # 安裝字體配置工具
         python -m pip install --upgrade pip
-        pip install matplotlib pillow requests pandas beautifulsoup4 lxml html5lib
+        pip install requests pandas matplotlib pillow
+
+    - name: Install SimHei font
+      run: |
+        mkdir -p ~/.fonts
+        wget -O ~/.fonts/SimHei.ttf https://example.com/path/to/SimHei.ttf  # 下載 SimHei 字體
+        fc-cache -fv  # 刷新字體緩存
 
     - name: Run script
       env:
