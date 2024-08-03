@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
-from io import StringIO
+import matplotlib.pyplot as plt
+from io import BytesIO
+from PIL import Image
 
 def fetch_taiwan_stock_data():
     try:
@@ -20,25 +22,40 @@ def fetch_taiwan_stock_data():
             print("DataFrame head:")
             print(df.head())
 
-            # 格式化為字符串
-            message = df.to_string(index=False)
-            return f"三大法人買賣金額\n\n{message}"
-        else:
-            return "No tables found on the webpage."
-    except Exception as e:
-        return f"Error occurred: {str(e)}"
+            # 將 DataFrame 繪製為圖片
+            fig, ax = plt.subplots(figsize=(12, 6))  # 調整圖片大小
+            ax.axis('off')  # 隱藏坐標軸
+            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+            table.auto_set_font_size(False)
+            table.set_fontsize(10)
+            table.scale(1.2, 1.2)  # 調整表格縮放比例
 
-def send_line_notify(message, token):
+            # 將圖片保存為 bytes
+            buf = BytesIO()
+            plt.savefig(buf, format='png', bbox_inches='tight')
+            buf.seek(0)
+
+            image = Image.open(buf)
+            return buf.getvalue()  # 返回圖片的 bytes
+        else:
+            return None
+    except Exception as e:
+        print(f"Error occurred: {str(e)}")
+        return None
+
+def send_line_notify(image_bytes, token):
     try:
         url = 'https://notify-api.line.me/api/notify'
         headers = {
-            'Authorization': f'Bearer {token}',
-            'Content-Type': 'application/x-www-form-urlencoded'
+            'Authorization': f'Bearer {token}'
+        }
+        files = {
+            'imageFile': ('stock_data.png', image_bytes, 'image/png')
         }
         data = {
-            'message': message
+            'message': '三大法人買賣金額'
         }
-        response = requests.post(url, headers=headers, data=data)
+        response = requests.post(url, headers=headers, data=data, files=files)
         response.raise_for_status()  # 確保 POST 請求成功
         print(f'Notification sent successfully! Status Code: {response.status_code}')
         print(f'Response Text: {response.text}')
@@ -47,6 +64,8 @@ def send_line_notify(message, token):
 
 if __name__ == "__main__":
     token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 替換為你的 LINE Notify token
-    stock_data = fetch_taiwan_stock_data()
-    print(f'Stock Data:\n{stock_data}')  # 輸出抓取的數據
-    send_line_notify(stock_data, token)
+    image_bytes = fetch_taiwan_stock_data()
+    if image_bytes:
+        send_line_notify(image_bytes, token)
+    else:
+        print("Failed to fetch or generate image.")
