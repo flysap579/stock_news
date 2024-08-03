@@ -17,13 +17,14 @@ def fetch_taiwan_stock_data():
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
- # 格式化數字
+
+            # 格式化數字
             def format_number(x):
                 try:
                     # 將數字轉換為浮點數
                     value = float(x)
                     # 四捨五入至億元（即以 1e8 為單位），保留小數點後兩位
-                    value_in_billion = round(value / 1e8)
+                    value_in_billion = round(value / 1e8, 2)
                     # 返回格式化後的字符串，並添加「億元」單位
                     return f'{value_in_billion} 億元'
                 except (ValueError, TypeError):
@@ -38,16 +39,25 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 80
 
-            # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
+            # 創建圖片
+            fig, ax = plt.subplots(figsize=(12, 6), dpi=150)  # 設置解析度和圖片大小
             ax.axis('off')  # 隱藏坐標軸
+            
+            # 顯示表格標題
+            title = '113年08月02日 三大法人買賣金額統計表\n單位名稱  買進金額  賣出金額  買賣差額'
+            ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold', bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3'))
+
+            # 顯示表格內容
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1,3)  # 調整表格縮放比例
+            table.scale(1.2, 1.2)  # 調整表格縮放比例
 
+            # 調整表格的大小以適應內容
+            table.auto_set_column_width([i for i in range(len(df.columns))])
+            table.auto_set_row_height([i for i in range(len(df.index))])
+            
             # 將圖片保存為 bytes
             buf = BytesIO()
             plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1)
