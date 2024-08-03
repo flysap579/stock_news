@@ -18,62 +18,39 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
+            # 格式化數字
+            def format_number(x):
+                try:
+                    return f'{int(x):,}'  # 將數字格式化為帶有逗號的格式
+                except (ValueError, TypeError):
+                    return x
+
+            # 應用格式化
+            df = df.applymap(format_number)
+
             # 打印表格的前幾行以確認數據
-            print("Original DataFrame head:")
+            print("DataFrame head:")
             print(df.head())
 
-            # 假設需要處理的合併列是第一列，並且第一行和第二行合併在一起
-            if df.shape[1] > 0:
-                # 提取列標題
-                header = df.iloc[0, 0].split(' ', 1)
-                # 更新列名
-                new_columns = [header[0], header[1]] + df.columns[1:].tolist()
-                df.columns = new_columns
+            # 設置 matplotlib 字體以支持中文字符
+            plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
+            plt.rcParams['font.size'] = 80
 
-                # 移除第一行（已經用來做列名）
-                df = df[1:]
+            # 將 DataFrame 繪製為圖片
+            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
+            ax.axis('off')  # 隱藏坐標軸
+            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+            table.auto_set_font_size(False)
+            table.set_fontsize(10)
+            table.scale(1,3)  # 調整表格縮放比例
 
-                # 格式化數字
-                def format_number(x):
-                    try:
-                        return f'{int(x):,}'  # 將數字格式化為帶有逗號的格式
-                    except (ValueError, TypeError):
-                        return x
+            # 將圖片保存為 bytes
+            buf = BytesIO()
+            plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1)
+            buf.seek(0)
 
-                # 應用格式化
-                df = df.applymap(format_number)
-
-                # 打印修改後的表格前幾行
-                print("Modified DataFrame head:")
-                print(df.head())
-
-                # 設置 matplotlib 字體以支持中文字符
-                plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-                plt.rcParams['font.size'] = 10
-
-                # 創建圖片
-                fig, ax = plt.subplots(figsize=(14, 8), dpi=150)  # 設置更高解析度
-                ax.axis('off')  # 隱藏坐標軸
-                
-                # 顯示表格標題
-                title = '三大法人買賣金額統計表'
-                ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold')
-                
-                # 顯示表格內容
-                table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
-                table.auto_set_font_size(False)
-                table.set_fontsize(10)
-                table.scale(1.2, 1.2)  # 調整表格縮放比例
-
-                # 將圖片保存為 bytes
-                buf = BytesIO()
-                plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1)
-                buf.seek(0)
-
-                image = Image.open(buf)
-                return buf.getvalue()  # 返回圖片的 bytes
-            else:
-                return None
+            image = Image.open(buf)
+            return buf.getvalue()  # 返回圖片的 bytes
         else:
             return None
     except Exception as e:
