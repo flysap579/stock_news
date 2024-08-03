@@ -12,28 +12,12 @@ def fetch_taiwan_stock_data():
 
         html_content = response.text
 
-         # 使用 pandas 解析 HTML 表格
+        # 使用 pandas 解析 HTML 表格
         tables = pd.read_html(html_content, flavor='lxml')
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
-
-            # 假設第一行為合併行，將其拆分為兩行
-            if not df.empty and df.shape[0] > 0:
-                # 提取第一行的兩個標題
-                first_row = df.iloc[0].values
-                title_row1 = first_row[0]  # '113年08月02日 三大法人買賣金額統計表'
-                title_row2 = first_row[1]  # '單位名稱  買進金額  賣出金額  買賣差額'
-
-                # 設置 DataFrame 的標題行
-                header = title_row2.split(' ')
-                df.columns = header  # 使用標題行作為列標題
-
-                # 刪除標題行
-                df = df[1:]
-                df.reset_index(drop=True, inplace=True)  # 重置索引
-
-        # 格式化數字
+ # 格式化數字
             def format_number(x):
                 try:
                     # 將數字轉換為浮點數
