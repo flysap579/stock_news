@@ -9,7 +9,16 @@ def fetch_taiwan_stock_data():
         response.raise_for_status()  # 確保 HTTP 請求成功
 
         html_content = StringIO(response.text)
-        tables = pd.read_html(html_content, flavor='html5lib')  # 使用 'html5lib' 解析器
+
+        # 嘗試使用不同的解析器來解析 HTML
+        try:
+            tables = pd.read_html(html_content, flavor='lxml')
+        except ValueError:
+            try:
+                tables = pd.read_html(html_content, flavor='html5lib')
+            except Exception as e:
+                return f"Error occurred while parsing HTML: {str(e)}"
+
         if tables:
             df = tables[0]
             return df.to_string(index=False)
@@ -34,7 +43,7 @@ def send_line_notify(message, token):
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
-    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 替換為你的 LINE Notify token
+    token = 'YOUR_ACCESS_TOKEN_HERE'  # 替換為你的 LINE Notify token
     stock_data = fetch_taiwan_stock_data()
     message = f"今日台灣股市三大法人買賣金額統計表：\n\n{stock_data}"
     send_line_notify(message, token)
