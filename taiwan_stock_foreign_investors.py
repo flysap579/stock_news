@@ -47,22 +47,13 @@ def fetch_taiwan_stock_data():
 
             # 計算圖片大小
             num_rows, num_cols = df.shape
-            fig_width = max(num_cols * 2, 10)  # 每列寬度約為2單位，最小寬度10
-            fig_height = max(num_rows * 0.4, 6)  # 每行高度約為0.4單位，最小高度6
+            fig_width = max(num_cols * 0.5, 2.5)  # 每列寬度約為2單位，最小寬度10
+            fig_height = max(num_rows * 0.1, 1.5)  # 每行高度約為0.4單位，最小高度6
 
             # 將 DataFrame 繪製為圖片
             fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
             ax.axis('off')  # 隱藏坐標軸
-            
-            # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
-            ax.axis('off')  # 隱藏坐標軸
-            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
-            table.auto_set_font_size(False)
-            table.set_fontsize(10)
-            table.auto_set_column_width(range(len(multi_line_df.columns)))  # 調整表格縮放比例
 
-            
             # 顯示表格內容
             # 用空白字符填充標題行，實現多行顯示
             multi_line_columns = [
@@ -71,6 +62,11 @@ def fetch_taiwan_stock_data():
                 '賣出金額',
                 '買賣差額'
             ]
+            multi_line_df = pd.DataFrame(df.values, columns=multi_line_columns)
+            table = ax.table(cellText=multi_line_df.values, colLabels=multi_line_df.columns, cellLoc='center', loc='center')
+            table.auto_set_font_size(False)
+            table.set_fontsize(10)
+            table.auto_set_column_width(range(len(multi_line_df.columns)))  # 自動調整列寬
 
             # 將圖片保存為 bytes
             buf = BytesIO()
