@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from io import BytesIO
 from PIL import Image
+from datetime import datetime
 
 def fetch_taiwan_stock_data():
     try:
@@ -12,7 +13,7 @@ def fetch_taiwan_stock_data():
 
         html_content = response.text
 
-          # 使用 pandas 解析 HTML 表格
+        # 使用 pandas 解析 HTML 表格
         tables = pd.read_html(html_content, flavor='lxml')
         if tables:
             # 合併所有表格的數據
@@ -43,30 +44,35 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 18
+            plt.rcParams['font.size'] = 10
 
             # 計算圖片大小
             num_rows, num_cols = df.shape
-            fig_width = max(num_cols * 0.5, 2.5)  # 每列寬度約為2單位，最小寬度10
-            fig_height = max(num_rows * 0.1, 1.5)  # 每行高度約為0.4單位，最小高度6
+            fig_width = max(num_cols * 0.5, 2.5)  # 每列寬度約為2單位，最小寬度2.5
+            fig_height = max(num_rows * 0.5, 2.5)  # 每行高度約為0.5單位，最小高度2.5
 
             # 將 DataFrame 繪製為圖片
             fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
             ax.axis('off')  # 隱藏坐標軸
 
             # 顯示表格內容
-            # 用空白字符填充標題行，實現多行顯示
-            multi_line_columns = [
-                '單位名稱',  # 第二行
-                '買進金額',
-                '賣出金額',
-                '買賣差額'
-            ]
-            multi_line_df = pd.DataFrame(df.values, columns=multi_line_columns)
-            table = ax.table(cellText=multi_line_df.values, colLabels=multi_line_df.columns, cellLoc='center', loc='center')
+            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+
+            # 設置表格樣式
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.auto_set_column_width(range(len(multi_line_df.columns)))  # 自動調整列寬
+            table.auto_set_column_width(range(len(df.columns)))  # 自動調整列寬
+
+            # 設置顏色
+            for (i, j), cell in table.get_celld().items():
+                if i == 0:  # 標題行
+                    cell.set_text_props(weight='bold', color='white')
+                    cell.set_facecolor('#4F81BD')  # 標題行背景顏色
+                else:
+                    if (i + j) % 2 == 0:
+                        cell.set_facecolor('#E8F2F4')  # 奇數行背景顏色
+                    else:
+                        cell.set_facecolor('#FFFFFF')  # 偶數行背景顏色
 
             # 將圖片保存為 bytes
             buf = BytesIO()
@@ -101,7 +107,7 @@ def send_line_notify(image_bytes, token):
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
-    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
+    token = '你的 LINE Notify token'  # 替換為你的 LINE Notify token
     image_bytes = fetch_taiwan_stock_data()
     if image_bytes:
         send_line_notify(image_bytes, token)
