@@ -17,28 +17,13 @@ def fetch_taiwan_stock_data():
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
-
-            # 假設第一行為合併行，將其拆分為兩行
-            if not df.empty and df.shape[0] > 0:
-                first_row = df.iloc[0].values
-                title_row1 = first_row[0]  # '113年08月02日 三大法人買賣金額統計表'
-                title_row2 = first_row[1]  # '單位名稱  買進金額  賣出金額  買賣差額'
-
-                # 設置 DataFrame 的標題行
-                header = title_row2.split(' ')
-                df.columns = header  # 使用標題行作為列標題
-
-                # 刪除標題行
-                df = df[1:]
-                df.reset_index(drop=True, inplace=True)  # 重置索引
-
-            # 格式化數字
+ # 格式化數字
             def format_number(x):
                 try:
                     # 將數字轉換為浮點數
                     value = float(x)
                     # 四捨五入至億元（即以 1e8 為單位），保留小數點後兩位
-                    value_in_billion = round(value / 1e8, 2)
+                    value_in_billion = round(value / 1e8)
                     # 返回格式化後的字符串，並添加「億元」單位
                     return f'{value_in_billion} 億元'
                 except (ValueError, TypeError):
@@ -53,21 +38,15 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 10
+            plt.rcParams['font.size'] = 80
 
-            # 創建圖片
-            fig, ax = plt.subplots(figsize=(14, 8), dpi=150)  # 設置更高解析度
+            # 將 DataFrame 繪製為圖片
+            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
-            
-            # 顯示表格標題，將第一行和第二行分開
-            title = f'{title_row1}\n{title_row2}'
-            ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold')
-
-            # 顯示表格內容
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1.2, 1.2)  # 調整表格縮放比例
+            table.scale(1,3)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
@@ -94,12 +73,6 @@ def send_line_notify(image_bytes, token):
         data = {
             'message': '三大法人買賣金額'
         }
-        
-        # 打印請求細節以進行調試
-        print(f"Request URL: {url}")
-        print(f"Request Headers: {headers}")
-        print(f"Request Data: {data}")
-
         response = requests.post(url, headers=headers, data=data, files=files)
         response.raise_for_status()  # 確保 POST 請求成功
         print(f'Notification sent successfully! Status Code: {response.status_code}')
