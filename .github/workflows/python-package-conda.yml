@@ -1,4 +1,4 @@
-name: Send Taiwan Stock Data to LINE Notify
+name: Send Taiwan Stock Data to LINE Notify2
 
 on:
   schedule:
