@@ -71,6 +71,31 @@ def fetch_taiwan_stock_data():
             return buf.getvalue()  # 返回圖片的 bytes
         else:
             return None
+
+
+    def send_line_notify(image_bytes, token):
+    try:
+        url = 'https://notify-api.line.me/api/notify'
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        files = {
+            'imageFile': ('stock_data.png', image_bytes, 'image/png')
+        }
+        data = {
+            'message': '三大法人買賣金額'
+        }
+        response = requests.post(url, headers=headers, data=data, files=files)
+        
+        # 打印響應狀態和內容
+        print(f'Status Code: {response.status_code}')
+        print(f'Response Text: {response.text}')
+        
+        response.raise_for_status()  # 確保 POST 請求成功
+        print('Notification sent successfully!')
+    except requests.exceptions.RequestException as e:
+        print(f'Failed to send notification. Error: {str(e)}')
+
     except Exception as e:
         print(f"Error occurred: {str(e)}")
         return None
