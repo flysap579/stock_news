@@ -18,7 +18,7 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
-            # 格式化數字
+        # 格式化數字
             def format_number(x):
                 try:
                     value = float(x.replace(',', ''))
@@ -27,6 +27,8 @@ def fetch_taiwan_stock_data():
                 except (ValueError, TypeError):
                     return x
 
+
+      
             # 應用格式化
             df = df.applymap(format_number)
 
