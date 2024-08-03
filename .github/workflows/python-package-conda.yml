@@ -28,7 +28,7 @@ jobs:
     - name: Install SimHei font
       run: |
         mkdir -p ~/.fonts
-        wget -O ~/.fonts/SimHei.ttf https://github.com/Google/fonts/raw/main/ofl/simhei/SimHei-Regular.ttf
+        wget -O ~/.fonts/SimHei.ttf https://github.com/StellarCN/scp_zh/blob/master/fonts/SimHei.ttf
         fc-cache -fv  # 刷新字體緩存
 
     - name: Run script
