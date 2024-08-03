@@ -22,17 +22,21 @@ def fetch_taiwan_stock_data():
             print("DataFrame head:")
             print(df.head())
 
+            # 設置 matplotlib 字體以支持更多字符
+            plt.rcParams['font.family'] = 'Arial Unicode MS'  # 或使用其他支持Unicode的字體
+            plt.rcParams['font.size'] = 12
+
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(12, 6))  # 調整圖片大小
+            fig, ax = plt.subplots(figsize=(14, 8), dpi=300)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1.2, 1.2)  # 調整表格縮放比例
+            table.scale(1.5, 1.5)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
-            plt.savefig(buf, format='png', bbox_inches='tight')
+            plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1)
             buf.seek(0)
 
             image = Image.open(buf)
