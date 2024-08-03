@@ -78,7 +78,17 @@ def fetch_taiwan_stock_data():
                     else:
                         cell.set_facecolor('#FFFFFF')  # 偶數行背景顏色
 
-
+           # 根據數字設置顏色
+                    try:
+                        # 移除「億元」單位和逗號
+                        text = cell.get_text().get_text().replace(' 億元', '').replace(',', '')
+                        value = float(text)
+                        if value > 0:
+                            cell.set_text_props(color='red')  # 正數顯示為紅色
+                        elif value < 0:
+                            cell.set_text_props(color='green')  # 負數顯示為綠色
+                    except ValueError:
+                        pass  # 如果不是數字，則不設置顏色
 
             
             # 將圖片保存為 bytes
