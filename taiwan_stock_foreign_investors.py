@@ -17,7 +17,17 @@ def fetch_taiwan_stock_data():
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
-            
+
+            # 格式化數字
+            def format_number(x):
+                try:
+                    return f'{int(x):,}'  # 將數字格式化為帶有逗號的格式
+                except (ValueError, TypeError):
+                    return x
+
+            # 應用格式化
+            df = df.applymap(format_number)
+
             # 打印表格的前幾行以確認數據
             print("DataFrame head:")
             print(df.head())
