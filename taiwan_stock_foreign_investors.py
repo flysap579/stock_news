@@ -22,6 +22,15 @@ def fetch_taiwan_stock_data():
             if not df.empty:
                 # 提取原始標題
                 original_headers = df.iloc[1].values
+                # 替換第一行的內容，設置成兩行
+                df.columns = [
+                    '113年08月03日\n三大法人買賣金額統計表',  # 第一行
+                    '單位名稱',  # 第二行
+                    '買進金額',
+                    '賣出金額',
+                    '買賣差額'
+                ]
+                
               # 刪除原始標題行
                 df = df[1:].reset_index(drop=True)
 
