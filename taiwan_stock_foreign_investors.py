@@ -40,10 +40,14 @@ def fetch_taiwan_stock_data():
             # 打印表格的前幾行以確認數據
             print("DataFrame head:")
             print(df.head())
+            
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
             plt.rcParams['font.size'] = 18
+            
+            # 獲取當前日期
+            today_date = datetime.now().strftime('%Y年%m月%d日')
 
             # 計算圖片大小
             num_rows, num_cols = df.shape
@@ -53,6 +57,8 @@ def fetch_taiwan_stock_data():
             # 將 DataFrame 繪製為圖片
             fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
             ax.axis('off')  # 隱藏坐標軸
+            # 添加標題
+            plt.title(f'三大法人買賣金額表', fontsize=16, fontweight='bold', pad=20)
 
             # 顯示表格內容
             # 用空白字符填充標題行，實現多行顯示
