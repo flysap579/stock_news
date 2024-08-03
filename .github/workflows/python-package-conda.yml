@@ -1,4 +1,4 @@
-name: Send Taiwan Stock Data to LINE Notify2
+name: Send Taiwan Stock Data to LINE Notify
 
 on:
   schedule:
@@ -11,25 +11,23 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3 # 更新為最新版本
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v3 # 更新為最新版本
+      uses: actions/setup-python@v3
       with:
-        python-version: '3.x' # 使用 Python 3.x 版本
+        python-version: '3.x'
 
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y fonts-dejavu fonts-dejavu-extra fontconfig
         python -m pip install --upgrade pip
         pip install matplotlib pillow requests pandas beautifulsoup4 lxml html5lib
 
     - name: Install SimHei font
       run: |
         mkdir -p ~/.fonts
-        wget -O ~/.fonts/SimHei.ttf https://github.com/StellarCN/scp_zh/blob/master/fonts/SimHei.ttf
-        fc-cache -fv  # 刷新字體緩存
+        wget -O ~/.fonts/SimHei.ttf https://github.com/StellarCN/scp_zh/raw/master/fonts/SimHei.ttf
+        fc-cache -fv
 
     - name: Run script
       env:
