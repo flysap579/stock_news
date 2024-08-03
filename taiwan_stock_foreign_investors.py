@@ -46,6 +46,9 @@ def fetch_taiwan_stock_data():
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
             plt.rcParams['font.size'] = 18
 
+            # 獲取當前日期
+            today_date = datetime.now().strftime('%Y年%m月%d日')
+            
             # 計算圖片大小
             num_rows, num_cols = df.shape
             fig_width = max(num_cols * 0.5, 2.5)  # 每列寬度約為2單位，最小寬度10
