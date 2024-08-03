@@ -22,12 +22,12 @@ def fetch_taiwan_stock_data():
             print("DataFrame head:")
             print(df.head())
 
-            # 設置 matplotlib 字體以支持更多字符
-            plt.rcParams['font.family'] = 'Arial Unicode MS'  # 或使用其他支持Unicode的字體
-            plt.rcParams['font.size'] = 12
+            # 設置 matplotlib 字體以支持中文字符
+            plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
+            plt.rcParams['font.size'] = 10
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(14, 8), dpi=300)  # 設置更高解析度
+            fig, ax = plt.subplots(figsize=(14, 8), dpi=150)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
@@ -67,7 +67,7 @@ def send_line_notify(image_bytes, token):
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
-    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 替換為你的 LINE Notify token
+    token = PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 替換為你的 LINE Notify token
     image_bytes = fetch_taiwan_stock_data()
     if image_bytes:
         send_line_notify(image_bytes, token)
