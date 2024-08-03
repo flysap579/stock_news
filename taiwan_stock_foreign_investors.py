@@ -18,19 +18,11 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
-            # 打印原始表格的前幾行以確認數據
-            print("Original DataFrame head:")
-            print(df.head())
-
-            # 分割第一列為兩列
+            # 假設第一列是類別，需要分割為兩列
             if df.shape[1] > 0:
-                # 假設第一列是合併了類別和日期，需要分割
-                df[['類別', '日期']] = df.iloc[:, 0].str.extract(r'(.+?)(\d{4}/\d{2}/\d{2})')
-                df = df[['類別', '日期'] + df.columns[1:].tolist()]
-
-            # 打印分割後的表格以確認結果
-            print("Modified DataFrame head:")
-            print(df.head())
+                first_col_split = df.iloc[:, 0].str.extract(r'([^\(]+)\((.+)\)')
+                df = pd.concat([first_col_split, df.iloc[:, 1:]], axis=1)
+                df.columns = ['類別', '子類別'] + df.columns[2:].tolist()
 
             # 格式化數字
             def format_number(x):
@@ -42,21 +34,27 @@ def fetch_taiwan_stock_data():
             # 應用格式化
             df = df.applymap(format_number)
 
-            # 打印格式化後的表格
-            print("Formatted DataFrame head:")
+            # 打印表格的前幾行以確認數據
+            print("DataFrame head:")
             print(df.head())
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 80
+            plt.rcParams['font.size'] = 10
 
-            # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(8, 4), dpi=800)  # 設置更高解析度
+            # 創建圖片
+            fig, ax = plt.subplots(figsize=(14, 8), dpi=150)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
+
+            # 顯示表格標題
+            title = '三大法人買賣金額統計表'
+            ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold')
+
+            # 顯示表格內容
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1, 3)  # 調整表格縮放比例
+            table.scale(1.2, 1.2)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
