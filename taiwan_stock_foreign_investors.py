@@ -59,7 +59,7 @@ def fetch_taiwan_stock_data():
             fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
             ax.axis('off')  # 隱藏坐標軸
             # 添加標題
-            plt.title(f'{today_date} 三大法人買賣金額表', fontsize=16, fontweight='bold', pad=20)
+            plt.title(f'{today_date} 三大法人買賣金額表', fontsize=16, fontweight='bold', pad=12)
 
             # 顯示表格內容
             # 用空白字符填充標題行，實現多行顯示
