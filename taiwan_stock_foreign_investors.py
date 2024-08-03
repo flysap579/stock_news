@@ -10,18 +10,26 @@ def fetch_taiwan_stock_data():
 
         html_content = StringIO(response.text)
 
-        # 嘗試使用不同的解析器來解析 HTML
-        try:
-            tables = pd.read_html(html_content, flavor='lxml')
-        except ValueError:
-            try:
-                tables = pd.read_html(html_content, flavor='html5lib')
-            except Exception as e:
-                return f"Error occurred while parsing HTML: {str(e)}"
-
+        # 使用 'lxml' 解析器來解析 HTML
+        tables = pd.read_html(html_content, flavor='lxml')
         if tables:
+            # 假設第一個表格是我們需要的表格
             df = tables[0]
-            return df.to_string(index=False)
+            
+            # 提取最近一天的數據
+            # 假設表格的第一列是日期
+            # 需要根據實際表格的列名和內容來修改這部分
+            df.columns = df.iloc[0]  # 第一行是表頭
+            df = df[1:]  # 去掉第一行表頭
+            df.columns = df.columns.str.strip()  # 去掉列名中的空格
+
+            # 查找最近一天的數據
+            recent_date = df['日期'].max()
+            recent_data = df[df['日期'] == recent_date]
+
+            # 格式化為字符串
+            message = recent_data.to_string(index=False)
+            return f"最近一天（三大法人買賣金額）\n\n{message}"
         else:
             return "No tables found on the webpage."
     except Exception as e:
@@ -45,5 +53,4 @@ def send_line_notify(message, token):
 if __name__ == "__main__":
     token = 'YOUR_ACCESS_TOKEN_HERE'  # 替換為你的 LINE Notify token
     stock_data = fetch_taiwan_stock_data()
-    message = f"今日台灣股市三大法人買賣金額統計表：\n\n{stock_data}"
-    send_line_notify(message, token)
+    send_line_notify(stock_data, token)
