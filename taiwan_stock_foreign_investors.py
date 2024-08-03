@@ -47,8 +47,8 @@ def fetch_taiwan_stock_data():
 
             # 計算圖片大小
             num_rows, num_cols = df.shape
-            fig_width = max(num_cols * 1, 10)  # 每列寬度約為2單位，最小寬度10
-            fig_height = max(num_rows *0.2, 6)  # 每行高度約為0.4單位，最小高度6
+            fig_width = max(num_cols * 2, 6)  # 每列寬度約為2單位，最小寬度10
+            fig_height = max(num_rows *0.4, 1.2)  # 每行高度約為0.4單位，最小高度6
 
             # 將 DataFrame 繪製為圖片
             fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
