@@ -18,6 +18,20 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
+            # 將第一行標題拆分成兩行
+            if not df.empty:
+                first_row = df.iloc[0].values
+                # 替換第一行的內容，設置成兩行
+                df.columns = [
+                    '113年08月02日\n三大法人買賣金額統計表',  # 第一行
+                    '單位名稱',  # 第二行
+                    '買進金額',
+                    '賣出金額',
+                    '買賣差額'
+                ]
+                df = df[1:]  # 移除合併行
+                df.reset_index(drop=True, inplace=True)  # 重置索引
+
             # 格式化數字
             def format_number(x):
                 try:
@@ -66,7 +80,7 @@ def fetch_taiwan_stock_data():
         else:
             return None
     except Exception as e:
-        print(f"Error occurred: {str(e)}")
+        print(f"發生錯誤: {str(e)}")
         return None
 
 def send_line_notify(image_bytes, token):
@@ -83,10 +97,10 @@ def send_line_notify(image_bytes, token):
         }
         response = requests.post(url, headers=headers, data=data, files=files)
         response.raise_for_status()  # 確保 POST 請求成功
-        print(f'Notification sent successfully! Status Code: {response.status_code}')
-        print(f'Response Text: {response.text}')
+        print(f'通知發送成功！狀態碼: {response.status_code}')
+        print(f'響應文本: {response.text}')
     except requests.exceptions.RequestException as e:
-        print(f'Failed to send notification. Error: {str(e)}')
+        print(f'發送通知失敗。錯誤: {str(e)}')
 
 if __name__ == "__main__":
     token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
@@ -94,4 +108,4 @@ if __name__ == "__main__":
     if image_bytes:
         send_line_notify(image_bytes, token)
     else:
-        print("Failed to fetch or generate image.")
+        print("獲取或生成圖片失敗。")
