@@ -1,9 +1,10 @@
+import requests
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-import pandas as pd
 import time
 
 def fetch_taiwan_stock_data():
@@ -64,10 +65,11 @@ def send_line_notify(message, token):
         response.raise_for_status()  # 確保 POST 請求成功
         print(f'Notification sent successfully! Status Code: {response.status_code}')
         print(f'Response Text: {response.text}')
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
     token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 替換為你的 LINE Notify token
     stock_data = fetch_taiwan_stock_data()
+    print(f'Stock Data:\n{stock_data}')  # 輸出抓取的數據
     send_line_notify(stock_data, token)
