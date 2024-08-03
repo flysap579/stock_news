@@ -12,18 +12,23 @@ def fetch_taiwan_stock_data():
 
         html_content = response.text
 
-        # 使用 pandas 解析 HTML 表格
+          # 使用 pandas 解析 HTML 表格
         tables = pd.read_html(html_content, flavor='lxml')
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
-        # 格式化數字
+
+            # 移除表格的第一行
+            if not df.empty:
+                df = df.iloc[0:].reset_index(drop=True)  # 刪除第一行，並重設索引
+
+            # 格式化數字
             def format_number(x):
                 try:
                     # 將數字轉換為浮點數
                     value = float(x)
                     # 四捨五入至億元（即以 1e8 為單位），保留小數點後兩位
-                    value_in_billion = round(value / 1e8)
+                    value_in_billion = round(value / 1e8, 2)
                     # 返回格式化後的字符串，並添加「億元」單位
                     return f'{value_in_billion} 億元'
                 except (ValueError, TypeError):
@@ -38,15 +43,30 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 80
+            plt.rcParams['font.size'] = 12
+
+            # 計算圖片大小
+            num_rows, num_cols = df.shape
+            fig_width = max(num_cols * 2, 10)  # 每列寬度約為2單位，最小寬度10
+            fig_height = max(num_rows * 0.4, 6)  # 每行高度約為0.4單位，最小高度6
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
+            fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
             ax.axis('off')  # 隱藏坐標軸
-            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+
+            # 顯示表格內容
+            # 用空白字符填充標題行，實現多行顯示
+            multi_line_columns = [
+                '單位名稱',  
+                '買進金額',
+                '賣出金額',
+                '買賣差額'
+            ]
+            multi_line_df = pd.DataFrame(df.values, columns=multi_line_columns)
+            table = ax.table(cellText=multi_line_df.values, colLabels=multi_line_df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1,3)  # 調整表格縮放比例
+            table.auto_set_column_width(range(len(multi_line_df.columns)))  # 自動調整列寬
 
             # 將圖片保存為 bytes
             buf = BytesIO()
