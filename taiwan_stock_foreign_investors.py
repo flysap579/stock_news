@@ -23,7 +23,7 @@ def fetch_taiwan_stock_data():
                 try:
                     value = float(x.replace(',', ''))
                     value_in_billion = round(value / 1e8, 2)  # 轉換為億元並四捨五入到小數點後兩位
-                    return f'{value_in_billion} 億元'  # 格式化數字並增加單位
+                    return f'{value_in_billion} '  # 格式化數字並增加單位
                 except (ValueError, TypeError):
                     return x
 
