@@ -73,7 +73,7 @@ def fetch_taiwan_stock_data():
                     cell.set_text_props(weight='bold', color='white')
                     cell.set_facecolor('#4F81BD')  # 標題行背景顏色
                 else:
-                    if (i + j) % 2 == 0:
+                    if (i ) % 2 == 0:
                         cell.set_facecolor('#E8F2F4')  # 奇數行背景顏色
                     else:
                         cell.set_facecolor('#FFFFFF')  # 偶數行背景顏色
