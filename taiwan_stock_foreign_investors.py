@@ -12,7 +12,7 @@ def fetch_taiwan_stock_data():
 
         html_content = response.text
 
-        # 使用 pandas 解析 HTML 表格
+          # 使用 pandas 解析 HTML 表格
         tables = pd.read_html(html_content, flavor='lxml')
         if tables:
             # 合併所有表格的數據
@@ -78,7 +78,7 @@ def fetch_taiwan_stock_data():
         else:
             return None
     except Exception as e:
-        print(f"發生錯誤: {str(e)}")
+        print(f"Error occurred: {str(e)}")
         return None
 
 def send_line_notify(image_bytes, token):
@@ -95,10 +95,10 @@ def send_line_notify(image_bytes, token):
         }
         response = requests.post(url, headers=headers, data=data, files=files)
         response.raise_for_status()  # 確保 POST 請求成功
-        print(f'通知發送成功！狀態碼: {response.status_code}')
-        print(f'回應文本: {response.text}')
+        print(f'Notification sent successfully! Status Code: {response.status_code}')
+        print(f'Response Text: {response.text}')
     except requests.exceptions.RequestException as e:
-        print(f'發送通知失敗。錯誤: {str(e)}')
+        print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
     token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
@@ -106,4 +106,4 @@ if __name__ == "__main__":
     if image_bytes:
         send_line_notify(image_bytes, token)
     else:
-        print("未能獲取或生成圖片。")
+        print("Failed to fetch or generate image.")
