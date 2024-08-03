@@ -11,10 +11,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3 # 更新為最新版本
+      uses: actions/checkout@v4 # 更新為最新版本
 
     - name: Set up Python
-      uses: actions/setup-python@v3 # 更新為最新版本
+      uses: actions/setup-python@v4 # 更新為最新版本
       with:
         python-version: '3.x' # 使用 Python 3.x 版本
 
