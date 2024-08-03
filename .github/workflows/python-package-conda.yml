@@ -23,6 +23,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install matplotlib pillow requests pandas beautifulsoup4 lxml html5lib
 
+    - name: Install SimHei font
+      run: |
+        mkdir -p ~/.fonts
+        wget -O ~/.fonts/SimHei.ttf https://github.com/StellarCN/scp_zh/raw/master/fonts/SimHei.ttf
+        fc-cache -fv
+
     - name: Run script
       env:
         LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
