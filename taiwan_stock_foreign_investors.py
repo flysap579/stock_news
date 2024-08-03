@@ -20,10 +20,20 @@ def fetch_taiwan_stock_data():
 
             # 假設第一行為合併行，將其拆分為兩行
             if not df.empty and df.shape[0] > 0:
-                first_row = df.iloc[0].values
-                df.columns = first_row  # 使用合併行作為列標題
-                df = df[1:]  # 移除合併行
-                df.reset_index(drop=True, inplace=True)  # 重置索引
+                # 提取原始數據
+                original_data = df.iloc[0].values
+                # 假設第一行有兩部分，進行拆分
+                split_row1 = ['合併部分1', '合併部分2']  # 這裡需要根據實際情況進行修改
+                split_row2 = original_data[2:]  # 剩餘部分作為第二行
+
+                # 創建新的 DataFrame
+                df_new = pd.DataFrame([split_row1, split_row2], columns=df.columns)
+                df_new = pd.concat([df_new, df[1:]], ignore_index=True)
+
+                # 將 DataFrame 列標題設置為第一行
+                df_new.columns = df.iloc[1]
+                df_new = df_new[2:]  # 移除處理行
+                df_new.reset_index(drop=True, inplace=True)  # 重置索引
 
             # 格式化數字
             def format_number(x):
@@ -38,11 +48,11 @@ def fetch_taiwan_stock_data():
                     return x  # 如果轉換失敗，返回原始值
 
             # 應用格式化
-            df = df.applymap(format_number)
+            df_new = df_new.applymap(format_number)
 
             # 打印表格的前幾行以確認數據
             print("DataFrame head:")
-            print(df.head())
+            print(df_new.head())
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
@@ -57,7 +67,7 @@ def fetch_taiwan_stock_data():
             ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold')
             
             # 顯示表格內容
-            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
+            table = ax.table(cellText=df_new.values, colLabels=df_new.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
             table.scale(1.2, 1.2)  # 調整表格縮放比例
