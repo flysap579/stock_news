@@ -34,10 +34,10 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 10
+            plt.rcParams['font.size'] = 20
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(14, 8), dpi=150)  # 設置更高解析度
+            fig, ax = plt.subplots(figsize=(18, 18), dpi=300)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
