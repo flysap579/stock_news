@@ -21,7 +21,7 @@ def fetch_taiwan_stock_data():
             # 修改第一行標題，將其拆分為兩行
             if not df.empty:
                 # 提取原始標題
-                original_headers = df.iloc[0].values
+                original_headers = df.iloc[1].values
               # 刪除原始標題行
                 df = df[1:].reset_index(drop=True)
 
