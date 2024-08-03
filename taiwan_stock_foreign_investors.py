@@ -20,7 +20,7 @@ def fetch_taiwan_stock_data():
 
             # 移除表格的第一行
             if not df.empty:
-                df = df.iloc[1:].reset_index(drop=True)  # 刪除第一行，並重設索引
+                df = df.iloc[0:].reset_index(drop=True)  # 刪除第一行，並重設索引
 
             # 格式化數字
             def format_number(x):
@@ -57,10 +57,10 @@ def fetch_taiwan_stock_data():
             # 顯示表格內容
             # 用空白字符填充標題行，實現多行顯示
             multi_line_columns = [
-                '113年08月03日三大法人買賣金額統計表\n',  # 第一行
                 '單位名稱',  # 第二行
                 '買進金額',
-                '賣出金額'
+                '賣出金額',
+                '買賣差額'
             ]
             multi_line_df = pd.DataFrame(df.values, columns=multi_line_columns)
             table = ax.table(cellText=multi_line_df.values, colLabels=multi_line_df.columns, cellLoc='center', loc='center')
