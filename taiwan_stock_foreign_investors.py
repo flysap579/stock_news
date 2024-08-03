@@ -7,7 +7,8 @@ def fetch_taiwan_stock_data():
     response = requests.get(url)
     
     if response.status_code == 200:
-        tables = pd.read_html(response.text)
+        html_content = StringIO(response.text)
+        tables = pd.read_html(html_content)
         if tables:
             df = tables[0]
             return df.to_string(index=False)
