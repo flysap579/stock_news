@@ -17,8 +17,7 @@ def fetch_taiwan_stock_data():
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
-
-            # 格式化數字
+ # 格式化數字
             def format_number(x):
                 try:
                     # 將數字轉換為浮點數
@@ -39,21 +38,15 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 10
+            plt.rcParams['font.size'] = 80
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(14, 8), dpi=150)  # 設置更高解析度
+            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
-
-            # 顯示表格標題
-            title = '三大法人買賣金額統計表'
-            ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold')
-            
-            # 顯示表格內容
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1.2, 1.2)  # 調整表格縮放比例
+            table.scale(1,3)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
@@ -81,13 +74,9 @@ def send_line_notify(image_bytes, token):
             'message': '三大法人買賣金額'
         }
         response = requests.post(url, headers=headers, data=data, files=files)
-        
-        # 打印響應狀態和內容
-        print(f'Status Code: {response.status_code}')
-        print(f'Response Text: {response.text}')
-        
         response.raise_for_status()  # 確保 POST 請求成功
-        print('Notification sent successfully!')
+        print(f'Notification sent successfully! Status Code: {response.status_code}')
+        print(f'Response Text: {response.text}')
     except requests.exceptions.RequestException as e:
         print(f'Failed to send notification. Error: {str(e)}')
 
