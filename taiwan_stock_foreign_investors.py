@@ -18,6 +18,14 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
+            # 分割第一列為兩列
+            if df.shape[1] > 0:
+                df_first_col = df.iloc[:, 0].str.split(' ', 1, expand=True)  # 分割第一列
+                df = pd.concat([df_first_col, df.iloc[:, 1:]], axis=1)
+                
+                # 更新列名（如果需要）
+                df.columns = ['類別1', '類別2'] + df.columns[2:].tolist()
+
             # 格式化數字
             def format_number(x):
                 try:
@@ -37,12 +45,12 @@ def fetch_taiwan_stock_data():
             plt.rcParams['font.size'] = 80
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
+            fig, ax = plt.subplots(figsize=(8, 4), dpi=800)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1,3)  # 調整表格縮放比例
+            table.scale(1, 3)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
