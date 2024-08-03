@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
-from io import BytesIO
+from io import BytesIO, StringIO
 from PIL import Image
 
 def fetch_taiwan_stock_data():
@@ -12,8 +12,9 @@ def fetch_taiwan_stock_data():
 
         html_content = response.text
 
-        # 使用 pandas 解析 HTML 表格
-        tables = pd.read_html(html_content, flavor='lxml')
+        # 使用 StringIO 來處理 HTML 字串
+        html_io = StringIO(html_content)
+        tables = pd.read_html(html_io, flavor='lxml')
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
@@ -79,7 +80,8 @@ def send_line_notify(image_bytes, token):
     try:
         url = 'https://notify-api.line.me/api/notify'
         headers = {
-            'Authorization': f'Bearer {token}'
+            'Authorization': f'Bearer {token}',
+            'Content-Type': 'application/x-www-form-urlencoded'  # 添加正確的 Content-Type
         }
         files = {
             'imageFile': ('stock_data.png', image_bytes, 'image/png')
