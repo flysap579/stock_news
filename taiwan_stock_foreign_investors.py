@@ -1,11 +1,12 @@
-import requests
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
-import time
+import pandas as pd
+import requests
 
 def fetch_taiwan_stock_data():
     try:
@@ -18,8 +19,15 @@ def fetch_taiwan_stock_data():
         url = 'https://www.twse.com.tw/zh/trading/foreign/bfi82u.html'
         driver.get(url)
 
-        # 等待頁面加載完成
-        time.sleep(5)
+        # 使用顯式等待來等待表格加載完成
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, 'table.table.table-striped.table-bordered'))
+            )
+        except Exception as e:
+            print(f'Error while waiting for table element: {str(e)}')
+            driver.quit()
+            return "未找到表格元素。"
 
         # 查找數據表格
         table = driver.find_element(By.CSS_SELECTOR, 'table.table.table-striped.table-bordered')
