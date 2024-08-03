@@ -62,7 +62,7 @@ def fetch_taiwan_stock_data():
             # 顯示表格內容
             # 用空白字符填充標題行，實現多行顯示
             multi_line_columns = [
-                today_date,  # 第二行
+                'today_date',  # 第二行
                 '買進金額',
                 '賣出金額',
                 '買賣差額'
