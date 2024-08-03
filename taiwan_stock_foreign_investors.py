@@ -24,11 +24,9 @@ def fetch_taiwan_stock_data():
 
             # 分割第一列為兩列
             if df.shape[1] > 0:
-                df_first_col = df.iloc[:, 0].str.split(' ', 1, expand=True)  # 分割第一列
-                df = pd.concat([df_first_col, df.iloc[:, 1:]], axis=1)
-                
-                # 更新列名（如果需要）
-                df.columns = ['類別1', '類別2'] + df.columns[2:].tolist()
+                # 假設第一列是合併了類別和日期，需要分割
+                df[['類別', '日期']] = df.iloc[:, 0].str.extract(r'(.+?)(\d{4}/\d{2}/\d{2})')
+                df = df[['類別', '日期'] + df.columns[1:].tolist()]
 
             # 打印分割後的表格以確認結果
             print("Modified DataFrame head:")
