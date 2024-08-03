@@ -3,8 +3,7 @@ name: Send Taiwan Stock Data to LINE Notify
 on:
   schedule:
     - cron: '0 06 * * *' # 每天 UTC 06:30 觸發，可以根據需要調整時間
-   - cron: '0 07 * * *' # 每天 UTC 07:00 觸發，可以根據需要調整時間
-    
+
   workflow_dispatch: # 允許手動觸發工作流程
 
 jobs:
