@@ -45,9 +45,6 @@ def fetch_taiwan_stock_data():
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
             plt.rcParams['font.size'] = 18
-            
-            # 獲取當前日期
-            today_date = datetime.now().strftime('%Y年%m月%d日')
 
             # 計算圖片大小
             num_rows, num_cols = df.shape
