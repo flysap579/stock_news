@@ -17,6 +17,12 @@ def fetch_taiwan_stock_data():
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
+
+            # 移除表格的第一行
+            if not df.empty:
+                df = df.iloc[0:].reset_index(drop=True)  # 刪除第一行，並重設索引
+
+            
         # 格式化數字
             def format_number(x):
                 try:
