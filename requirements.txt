@@ -2,3 +2,6 @@ requests
 beautifulsoup4
 yfinance==0.2.33
 pytz
+
+
+pip install selenium webdriver-manager
