@@ -29,4 +29,4 @@ jobs:
       - name: Run stock price notification script
         env:
           LINE_NOTIFY_TOKEN: ${{ secrets.LINE_NOTIFY_TOKEN }}
-        run:taiwan_stock_foreign_investors
+        run:taiwan_stock_foreign_investors.py
