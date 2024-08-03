@@ -60,7 +60,7 @@ def fetch_taiwan_stock_data():
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1,3)  # 調整表格縮放比例
+            table.auto_set_column_width(range(len(multi_line_df.columns)))  # 調整表格縮放比例
 
             
             # 顯示表格內容
@@ -71,11 +71,6 @@ def fetch_taiwan_stock_data():
                 '賣出金額',
                 '買賣差額'
             ]
-            multi_line_df = pd.DataFrame(df.values, columns=multi_line_columns)
-            table = ax.table(cellText=multi_line_df.values, colLabels=multi_line_df.columns, cellLoc='center', loc='center')
-            table.auto_set_font_size(False)
-            table.set_fontsize(10)
-            table.auto_set_column_width(range(len(multi_line_df.columns)))  # 自動調整列寬
 
             # 將圖片保存為 bytes
             buf = BytesIO()
