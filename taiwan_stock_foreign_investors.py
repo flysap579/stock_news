@@ -45,15 +45,9 @@ def fetch_taiwan_stock_data():
             # 獲取當前日期
             today_date = datetime.now().strftime('%Y年%m月%d日')
 
-            # 設置圖片大小和解析度
-            fig, ax = plt.subplots(figsize=(10,6), dpi=150)  
+            # 將 DataFrame 繪製為圖片
+            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
-
-            # 設置標題行為兩行
-            title = f'{today_date} 三大法人買賣金額'
-            title_line1 = title[:10]  # 標題的前10個字元
-            title_line2 = title[10:]  # 標題的剩餘部分
-            plt.title(f'{title_line1}\n{title_line2}', fontsize=16, fontweight='bold')
 
             # 添加表格
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
@@ -94,7 +88,7 @@ def send_line_notify(image_bytes, token):
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
-    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
+    token = '你的 LINE Notify token'  # 替換為你的 LINE Notify token
     image_bytes = fetch_taiwan_stock_data()
     if image_bytes:
         send_line_notify(image_bytes, token)
