@@ -20,8 +20,8 @@ def fetch_taiwan_stock_data():
             print("DataFrame head:")
             print(df.head())
 
-            # 設置 matplotlib 字體以支持中文字符
-            plt.rcParams['font.family'] = 'AR PL UMing CN'  # 設置為支持中文的字體
+            # 設置 matplotlib 字體
+            plt.rcParams['font.family'] = 'DejaVu Sans'
             plt.rcParams['font.size'] = 10
 
             # 將 DataFrame 繪製為圖片
