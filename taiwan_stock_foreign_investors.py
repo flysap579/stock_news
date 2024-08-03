@@ -32,13 +32,14 @@ def fetch_taiwan_stock_data():
                 # 刪除標題行
                 df = df[1:]
                 df.reset_index(drop=True, inplace=True)  # 重置索引
- # 格式化數字
+
+            # 格式化數字
             def format_number(x):
                 try:
                     # 將數字轉換為浮點數
                     value = float(x)
                     # 四捨五入至億元（即以 1e8 為單位），保留小數點後兩位
-                    value_in_billion = round(value / 1e8)
+                    value_in_billion = round(value / 1e8, 2)
                     # 返回格式化後的字符串，並添加「億元」單位
                     return f'{value_in_billion} 億元'
                 except (ValueError, TypeError):
@@ -53,15 +54,21 @@ def fetch_taiwan_stock_data():
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 80
+            plt.rcParams['font.size'] = 10
 
-            # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
+            # 創建圖片
+            fig, ax = plt.subplots(figsize=(14, 8), dpi=150)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
+            
+            # 顯示表格標題，將第一行和第二行分開
+            title = f'{title_row1}\n{title_row2}'
+            ax.text(0.5, 1.05, title, fontsize=14, ha='center', va='center', fontweight='bold')
+
+            # 顯示表格內容
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1,3)  # 調整表格縮放比例
+            table.scale(1.2, 1.2)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
