@@ -32,6 +32,15 @@ def fetch_taiwan_stock_data():
             print("DataFrame head:")
             print(df.head())
 
+            # 如果第一列需要分割為兩列
+            # 假設第一列的內容為"自營商(自行買賣)"和"自營商(避險)"
+            if df.shape[1] > 0:  # 確保有足夠的列數
+                df_first_col = df.iloc[:, 0].str.split(' ', 1, expand=True)  # 分割第一列
+                df = pd.concat([df_first_col, df.iloc[:, 1:]], axis=1)
+                
+                # 更新列名（如果需要）
+                df.columns = ['類別1', '類別2'] + df.columns[2:].tolist()
+
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
             plt.rcParams['font.size'] = 10
