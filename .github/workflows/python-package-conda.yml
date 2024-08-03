@@ -29,9 +29,6 @@ jobs:
       run: |
         python - <<EOF
 import requests
-import pandas as pd
-import schedule
-import time
 
 def fetch_taiwan_stock_data():
     url = 'https://www.twse.com.tw/fund/BFI82U?response=json&dayDate=&weekDate=&monthDate=&type=day'
