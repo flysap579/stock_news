@@ -39,7 +39,8 @@ def fetch_taiwan_stock_data():
             plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1)
             buf.seek(0)
 
-            image = Image.open(buf)
+            image_size = len(buf.getvalue())
+            print(f'Generated image size: {image_size} bytes')  # 打印圖片大小
             return buf.getvalue()  # 返回圖片的 bytes
         else:
             return None
