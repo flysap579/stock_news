@@ -18,17 +18,13 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
-        # 格式化數字
+            # 格式化數字
             def format_number(x):
                 try:
-                    value = float(x.replace(',', ''))
-                    value_in_billion = round(value / 1e8, 2)  # 轉換為億元並四捨五入到小數點後兩位
-                    return f'{value_in_billion:,} 億元'  # 格式化數字並增加單位
+                    return f'{int(x):,}'  # 將數字格式化為帶有逗號的格式
                 except (ValueError, TypeError):
                     return x
 
-
-      
             # 應用格式化
             df = df.applymap(format_number)
 
