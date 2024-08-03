@@ -20,7 +20,6 @@ def fetch_taiwan_stock_data():
 
             # 假設第一行為合併行，將其拆分為兩行
             if not df.empty and df.shape[0] > 0:
-                # 提取第一行的兩個標題
                 first_row = df.iloc[0].values
                 title_row1 = first_row[0]  # '113年08月02日 三大法人買賣金額統計表'
                 title_row2 = first_row[1]  # '單位名稱  買進金額  賣出金額  買賣差額'
@@ -95,6 +94,12 @@ def send_line_notify(image_bytes, token):
         data = {
             'message': '三大法人買賣金額'
         }
+        
+        # 打印請求細節以進行調試
+        print(f"Request URL: {url}")
+        print(f"Request Headers: {headers}")
+        print(f"Request Data: {data}")
+
         response = requests.post(url, headers=headers, data=data, files=files)
         response.raise_for_status()  # 確保 POST 請求成功
         print(f'Notification sent successfully! Status Code: {response.status_code}')
