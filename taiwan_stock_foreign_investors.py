@@ -1,8 +1,9 @@
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
-from io import BytesIO, StringIO
+from io import BytesIO
 from PIL import Image
+from datetime import datetime
 
 def fetch_taiwan_stock_data():
     try:
@@ -12,9 +13,8 @@ def fetch_taiwan_stock_data():
 
         html_content = response.text
 
-        # 使用 StringIO 來處理 HTML 字串
-        html_io = StringIO(html_content)
-        tables = pd.read_html(html_io, flavor='lxml')
+        # 使用 pandas 解析 HTML 表格
+        tables = pd.read_html(html_content, flavor='lxml')
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
@@ -34,34 +34,29 @@ def fetch_taiwan_stock_data():
             # 應用格式化
             df = df.applymap(format_number)
 
-            # 添加日期標題行
-            date_title = '113年08月03日 三大法人買賣金額統計表'
-            header_row = pd.DataFrame([[''] * len(df.columns)], columns=df.columns)
-            date_header = pd.DataFrame([[date_title] + [''] * (len(df.columns) - 1)], columns=df.columns)
-            df_with_title = pd.concat([date_header, header_row, df], ignore_index=True)
-
             # 打印表格的前幾行以確認數據
             print("DataFrame head:")
-            print(df_with_title.head())
+            print(df.head())
 
             # 設置 matplotlib 字體以支持中文字符
             plt.rcParams['font.family'] = 'SimHei'  # 設置為支持中文的字體
-            plt.rcParams['font.size'] = 12
+            plt.rcParams['font.size'] = 10
 
-            # 計算圖片大小
-            num_rows, num_cols = df_with_title.shape
-            fig_width = max(num_cols * 2, 10)  # 每列寬度約為2單位，最小寬度10
-            fig_height = max(num_rows * 0.4, 6)  # 每行高度約為0.4單位，最小高度6
+            # 獲取當前日期
+            today_date = datetime.now().strftime('%Y年%m月%d日')
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(fig_width, fig_height), dpi=150)
+            fig, ax = plt.subplots(figsize=(10,6), dpi=150)  # 設置圖片大小和解析度
             ax.axis('off')  # 隱藏坐標軸
 
-            # 顯示表格內容
-            table = ax.table(cellText=df_with_title.values, colLabels=df_with_title.columns, cellLoc='center', loc='center')
+            # 添加標題
+            plt.title(f'{today_date} 三大法人買賣金額表', fontsize=16, fontweight='bold')
+
+            # 添加表格
+            table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.auto_set_column_width(range(len(df_with_title.columns)))  # 自動調整列寬
+            table.scale(1,1.5)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
@@ -80,8 +75,7 @@ def send_line_notify(image_bytes, token):
     try:
         url = 'https://notify-api.line.me/api/notify'
         headers = {
-            'Authorization': f'Bearer {token}',
-            'Content-Type': 'multipart/form-data'  # 修改為 multipart/form-data
+            'Authorization': f'Bearer {token}'
         }
         files = {
             'imageFile': ('stock_data.png', image_bytes, 'image/png')
@@ -97,7 +91,7 @@ def send_line_notify(image_bytes, token):
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
-    token = '你的_LINE_Notify_token'  # 使用你的 LINE Notify token
+    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 使用你的 LINE Notify token
     image_bytes = fetch_taiwan_stock_data()
     if image_bytes:
         send_line_notify(image_bytes, token)
