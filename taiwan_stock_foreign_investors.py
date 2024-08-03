@@ -21,9 +21,7 @@ def fetch_taiwan_stock_data():
             # 格式化數字
             def format_number(x):
                 try:
-                    value = float(x.replace(',', ''))
-                    value_in_billion = round(value / 1e8, 2)  # 轉換為億元並四捨五入到小數點後兩位
-                    return f'{value_in_billion} 億元'  # 格式化數字並增加單位
+                    return f'{int(x):,}'  # 將數字格式化為帶有逗號的格式
                 except (ValueError, TypeError):
                     return x
 
@@ -39,21 +37,17 @@ def fetch_taiwan_stock_data():
             plt.rcParams['font.size'] = 80
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(8, 4), dpi=800)  # 設置更高解析度
+            fig, ax = plt.subplots(figsize=(8,4), dpi=800)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
             table.set_fontsize(10)
-            table.scale(1, 3)  # 調整表格縮放比例
+            table.scale(1,3)  # 調整表格縮放比例
 
             # 將圖片保存為 bytes
             buf = BytesIO()
             plt.savefig(buf, format='png', bbox_inches='tight', pad_inches=0.1)
             buf.seek(0)
-
-            # 將圖片保存為本地文件以便檢查
-            with open("output.png", "wb") as f:
-                f.write(buf.getvalue())
 
             image = Image.open(buf)
             return buf.getvalue()  # 返回圖片的 bytes
