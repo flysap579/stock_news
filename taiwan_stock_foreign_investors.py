@@ -18,6 +18,10 @@ def fetch_taiwan_stock_data():
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
 
+            # 打印原始表格的前幾行以確認數據
+            print("Original DataFrame head:")
+            print(df.head())
+
             # 分割第一列為兩列
             if df.shape[1] > 0:
                 df_first_col = df.iloc[:, 0].str.split(' ', 1, expand=True)  # 分割第一列
@@ -25,6 +29,10 @@ def fetch_taiwan_stock_data():
                 
                 # 更新列名（如果需要）
                 df.columns = ['類別1', '類別2'] + df.columns[2:].tolist()
+
+            # 打印分割後的表格以確認結果
+            print("Modified DataFrame head:")
+            print(df.head())
 
             # 格式化數字
             def format_number(x):
@@ -36,8 +44,8 @@ def fetch_taiwan_stock_data():
             # 應用格式化
             df = df.applymap(format_number)
 
-            # 打印表格的前幾行以確認數據
-            print("DataFrame head:")
+            # 打印格式化後的表格
+            print("Formatted DataFrame head:")
             print(df.head())
 
             # 設置 matplotlib 字體以支持中文字符
