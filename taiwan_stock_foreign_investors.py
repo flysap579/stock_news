@@ -54,6 +54,6 @@ def send_line_notify(message, token):
         print(f'Failed to send notification. Error: {str(e)}')
 
 if __name__ == "__main__":
-    token = 'YOUR_ACCESS_TOKEN_HERE'  # 替換為你的 LINE Notify token
+    token = 'PDd9np9rpELBAoRBZJ6GEtv4NROA4lwVKNFZdRhLMVf'  # 替換為你的 LINE Notify token
     stock_data = fetch_taiwan_stock_data()
     send_line_notify(stock_data, token)
