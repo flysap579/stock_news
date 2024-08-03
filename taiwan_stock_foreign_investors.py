@@ -81,7 +81,7 @@ def send_line_notify(image_bytes, token):
         url = 'https://notify-api.line.me/api/notify'
         headers = {
             'Authorization': f'Bearer {token}',
-            'Content-Type': 'application/x-www-form-urlencoded'  # 添加正確的 Content-Type
+            'Content-Type': 'multipart/form-data'  # 修改為 multipart/form-data
         }
         files = {
             'imageFile': ('stock_data.png', image_bytes, 'image/png')
