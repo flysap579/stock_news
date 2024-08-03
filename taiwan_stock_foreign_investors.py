@@ -37,7 +37,7 @@ def fetch_taiwan_stock_data():
             plt.rcParams['font.size'] = 20
 
             # 將 DataFrame 繪製為圖片
-            fig, ax = plt.subplots(figsize=(14, 8), dpi=300)  # 設置更高解析度
+            fig, ax = plt.subplots(figsize=(14, 10), dpi=100)  # 設置更高解析度
             ax.axis('off')  # 隱藏坐標軸
             table = ax.table(cellText=df.values, colLabels=df.columns, cellLoc='center', loc='center')
             table.auto_set_font_size(False)
