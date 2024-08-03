@@ -17,11 +17,16 @@ def fetch_taiwan_stock_data():
         if tables:
             # 合併所有表格的數據
             df = pd.concat(tables, ignore_index=True)
-
-
-                # 刪除原始標題行
-                df = df[1:].reset_index(drop=True)
-
+            # 設置標題行為兩行顯示
+            if not df.empty:
+                # 使用多行標題
+                df.columns = [
+                    '113年08月03日\n三大法人買賣金額統計表',  # 第一行標題
+                    '單位名稱',
+                    '買進金額',
+                    '賣出金額',
+                    '買賣差額'
+                ]
             # 格式化數字
             def format_number(x):
                 try:
