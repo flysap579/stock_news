@@ -2,7 +2,7 @@ name: Send Taiwan Stock Data to LINE Notify
 
 on:
   schedule:
-    - cron: "30 6 * * 1-5" # UTC 00:30 (台灣時間 14:00), 週一到週五
+    - cron: "50 6 * * 1-5" # UTC 00:30 (台灣時間 14:50), 週一到週五
     - cron: "00 7 * * 1-5" # UTC 00:30 (台灣時間 15:00), 週一到週五
   workflow_dispatch: # 允許手動觸發工作流程
 
